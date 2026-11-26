@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contra — Academy Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+:root{
+  --ink:#171a12;--lime:#d4ed99;--lime-bright:#e4f7a8;--lime-deep:#b8dd6a;--lime-dark:#9cc24e;
+  --accent:#5a7d12;--pop-lime:#DBFC37;--olive:#3f4a2e;
+  --white:#fff;--soft:#f7f8f2;--soft-2:#eef1e6;--border:#e3e6da;--muted:#7c8368;--muted-2:#616753;
+  --font-d:"Inter Tight",sans-serif;--font-b:"Inter",sans-serif;--font-m:"JetBrains Mono",monospace;
+  --wrap:1280px;--gut:clamp(1.25rem,4vw,4.5rem);--ease:cubic-bezier(.22,.61,.36,1);--head-h:72px;--r:14px;--r-lg:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);color:var(--ink);background:var(--white);line-height:1.55;-webkit-font-smoothing:antialiased;padding-top:var(--head-h)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--lime);color:var(--ink)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
+.btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--font-d);font-weight:600;font-size:1rem;padding:.9rem 1.6rem;border-radius:999px;transition:background .2s,transform .2s}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none}
+.btn-acc{background:var(--ink);color:#fff}.btn-acc:hover{background:#000;transform:translateY(-1px)}
+/* hero band */
+.col-hero{background:linear-gradient(170deg,var(--lime-bright),var(--lime) 60%,var(--lime-deep));padding:clamp(3rem,7vw,5.5rem) 0}
+.col-hero .crumb{font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--olive)}
+.col-hero h1{font-family:var(--font-d);font-weight:700;letter-spacing:-.03em;text-transform:uppercase;font-size:clamp(2.6rem,1.4rem+4vw,5rem);line-height:.9;margin-top:.6rem}
+.col-hero p{margin-top:1rem;max-width:52ch;color:var(--olive);font-size:1.1rem}
+.col-hero .count{margin-top:1.2rem;font-family:var(--font-m);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.6);display:inline-block;padding:.4rem .8rem;border-radius:999px}
+/* grid */
+.grid-sec{padding:clamp(3rem,6vw,5rem) 0}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.pcard{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;display:flex;flex-direction:column;text-align:left}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(25,25,25,.12);border-color:var(--lime-dark)}
+.pcard .pc-img{position:relative;aspect-ratio:1;background:var(--soft);overflow:hidden}
+.pcard .pc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.pcard:hover .pc-img img{transform:scale(1.05)}
+.pcard .pc-badge{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.92);font-family:var(--font-m);font-size:.6rem;font-weight:600;letter-spacing:.06em;padding:.2rem .5rem;border-radius:5px;color:var(--muted-2)}
+.pcard .pc-meta{padding:.9rem 1rem 1.1rem}
+.pcard h3{font-family:var(--font-d);font-weight:600;font-size:1rem;line-height:1.2;color:var(--ink)}
+.pcard .pc-cta{margin-top:.5rem;font-family:var(--font-m);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+/* cta band */
+.cta-band{background:var(--ink);color:#fff;text-align:center;padding:clamp(3rem,6vw,5rem) 0}
+.cta-band h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.8rem,3vw,2.6rem)}
+.cta-band p{margin:1rem auto 2rem;max-width:44ch;color:#b9bcc6}
+.cta-band .btn-acc{background:var(--lime);color:var(--ink)}.cta-band .btn-acc:hover{background:var(--lime-deep)}
+/* modal carousel */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(10,12,8,.9);display:none;align-items:center;justify-content:center;padding:2rem}
+.modal.is-open{display:flex}
+.modal-inner{position:relative;max-width:900px;width:100%;background:#fff;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;max-height:90vh}
+.modal-stage{position:relative;background:var(--soft);aspect-ratio:1;max-height:70vh}
+.modal-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .3s}
+.modal-stage img.is-active{opacity:1}
+.modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:2}
+.modal-nav svg{width:20px;height:20px;stroke:var(--ink);fill:none}
+.modal-prev{left:1rem}.modal-next{right:1rem}
+.modal-foot{padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--border)}
+.modal-foot h3{font-family:var(--font-d);font-weight:700;font-size:1.15rem}
+.modal-foot .dots{display:flex;gap:.3rem}
+.modal-foot .dots i{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.modal-foot .dots i.is-active{background:var(--ink)}
+.modal-close{position:absolute;top:1rem;right:1rem;z-index:3;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;font-size:1.3rem;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+@media(max-width:1023px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.pgrid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="col-hero"><div class="wrap">
+  <div class="crumb">Home / Collections / Academy</div>
+  <h1>Academy</h1>
+  <p>Match and training kit built for sport academies and development programmes.</p>
+  <div class="count">22 products</div>
+</div></section>
+
+<section class="grid-sec"><div class="wrap">
+  <div class="pgrid">
+    <button class="pcard" data-prod="challenge-square-academy-lycra-ribbed-training-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/academy/challenge-square-academy-lycra-ribbed-training-t-shirt/01.jpg" alt="Challenge Square Academy Lycra Ribbed Training T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Challenge Square Academy Lycra Ribbed Training T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="challenge-square-academy-training-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/challenge-square-academy-training-kit/01.jpg" alt="Challenge Square Academy Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Challenge Square Academy Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="challenge-square-academy-training-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/challenge-square-academy-training-kit-1/01.jpg" alt="Challenge Square Academy Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Challenge Square Academy Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="challenge-square-academy-training-kit-2"><div class="pc-img"><img loading="lazy" src="contra-products/academy/challenge-square-academy-training-kit-2/01.jpg" alt="Challenge Square Academy Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Challenge Square Academy Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ds-football-academy-match-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/ds-football-academy-match-kit/01.jpg" alt="DS Football Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>DS Football Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ds-football-academy-match-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/ds-football-academy-match-kit-1/01.jpg" alt="DS Football Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>DS Football Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="iplay-academy-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/iplay-academy-football-kit/01.jpg" alt="IPlay Academy Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>IPlay Academy Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="kicks-academy-training-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/kicks-academy-training-kit/01.jpg" alt="Kicks Academy Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Kicks Academy Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="padded-waterproof-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/padded-waterproof-tracksuit/01.jpg" alt="Padded Waterproof Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Padded Waterproof Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="petro-sport-academy-match-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/petro-sport-academy-match-kit/01.jpg" alt="Petro Sport Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Petro Sport Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="petro-sport-academy-match-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/petro-sport-academy-match-kit-1/01.jpg" alt="Petro Sport Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Petro Sport Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="platinum-academy-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/platinum-academy-football-kit/01.jpg" alt="Platinum Academy Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Platinum Academy Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="platinum-academy-football-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/platinum-academy-football-kit-1/01.jpg" alt="Platinum Academy Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Platinum Academy Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="platinum-academy-football-kit-2"><div class="pc-img"><img loading="lazy" src="contra-products/academy/platinum-academy-football-kit-2/01.jpg" alt="Platinum Academy Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Platinum Academy Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="spirit-academy-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/spirit-academy-football-kit/01.jpg" alt="Spirit Academy Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Spirit Academy Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-academy-goalkeeper-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-academy-goalkeeper-kit/01.jpg" alt="Sportivo Academy Goalkeeper Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Academy Goalkeeper Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-academy-goalkeeper-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-academy-goalkeeper-kit-1/01.jpg" alt="Sportivo Academy Goalkeeper Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Academy Goalkeeper Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-academy-match-kit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-academy-match-kit/01.jpg" alt="Sportivo Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-academy-match-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-academy-match-kit-1/01.jpg" alt="Sportivo Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-academy-match-kit-2"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-academy-match-kit-2/01.jpg" alt="Sportivo Academy Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Academy Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="sportivo-athletic-tracksuit-set"><div class="pc-img"><img loading="lazy" src="contra-products/academy/sportivo-athletic-tracksuit-set/01.jpg" alt="Sportivo Athletic Tracksuit Set"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Sportivo Athletic Tracksuit Set</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="training-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/academy/training-tracksuit/01.jpg" alt="Training Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Training Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap">
+  <h2>Kit your team in Academy wear.</h2>
+  <p>Request a quote and a Contra rep will build your first mockup — factory-direct, no commitment.</p>
+  <a class="btn btn-acc" href="contra7-1.html#request">Request a quote <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div></section>
+
+<div id="site-footer"></div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-inner">
+    <button class="modal-close" id="mClose" aria-label="Close">✕</button>
+    <div class="modal-stage" id="mStage"></div>
+    <button class="modal-nav modal-prev" id="mPrev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="modal-nav modal-next" id="mNext" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="modal-foot"><h3 id="mTitle"></h3><div class="dots" id="mDots"></div></div>
+  </div>
+</div>
+
+<script>
+var PRODUCTS = {"challenge-square-academy-lycra-ribbed-training-t-shirt": {"title": "Challenge Square Academy Lycra Ribbed Training T-Shirt", "images": ["contra-products/academy/challenge-square-academy-lycra-ribbed-training-t-shirt/01.jpg", "contra-products/academy/challenge-square-academy-lycra-ribbed-training-t-shirt/02.jpg"]}, "challenge-square-academy-training-kit": {"title": "Challenge Square Academy Training Kit", "images": ["contra-products/academy/challenge-square-academy-training-kit/01.jpg", "contra-products/academy/challenge-square-academy-training-kit/02.jpg"]}, "challenge-square-academy-training-kit-1": {"title": "Challenge Square Academy Training Kit", "images": ["contra-products/academy/challenge-square-academy-training-kit-1/01.jpg", "contra-products/academy/challenge-square-academy-training-kit-1/02.jpg"]}, "challenge-square-academy-training-kit-2": {"title": "Challenge Square Academy Training Kit", "images": ["contra-products/academy/challenge-square-academy-training-kit-2/01.jpg", "contra-products/academy/challenge-square-academy-training-kit-2/02.jpg"]}, "ds-football-academy-match-kit": {"title": "DS Football Academy Match Kit", "images": ["contra-products/academy/ds-football-academy-match-kit/01.jpg", "contra-products/academy/ds-football-academy-match-kit/02.jpg"]}, "ds-football-academy-match-kit-1": {"title": "DS Football Academy Match Kit", "images": ["contra-products/academy/ds-football-academy-match-kit-1/01.jpg", "contra-products/academy/ds-football-academy-match-kit-1/02.jpg"]}, "iplay-academy-football-kit": {"title": "IPlay Academy Football Kit", "images": ["contra-products/academy/iplay-academy-football-kit/01.jpg", "contra-products/academy/iplay-academy-football-kit/02.jpg"]}, "kicks-academy-training-kit": {"title": "Kicks Academy Training Kit", "images": ["contra-products/academy/kicks-academy-training-kit/01.jpg", "contra-products/academy/kicks-academy-training-kit/02.jpg"]}, "padded-waterproof-tracksuit": {"title": "Padded Waterproof Tracksuit", "images": ["contra-products/academy/padded-waterproof-tracksuit/01.jpg", "contra-products/academy/padded-waterproof-tracksuit/02.jpg"]}, "petro-sport-academy-match-kit": {"title": "Petro Sport Academy Match Kit", "images": ["contra-products/academy/petro-sport-academy-match-kit/01.jpg", "contra-products/academy/petro-sport-academy-match-kit/02.jpg"]}, "petro-sport-academy-match-kit-1": {"title": "Petro Sport Academy Match Kit", "images": ["contra-products/academy/petro-sport-academy-match-kit-1/01.jpg", "contra-products/academy/petro-sport-academy-match-kit-1/02.jpg"]}, "platinum-academy-football-kit": {"title": "Platinum Academy Football Kit", "images": ["contra-products/academy/platinum-academy-football-kit/01.jpg", "contra-products/academy/platinum-academy-football-kit/02.jpg"]}, "platinum-academy-football-kit-1": {"title": "Platinum Academy Football Kit", "images": ["contra-products/academy/platinum-academy-football-kit-1/01.jpg", "contra-products/academy/platinum-academy-football-kit-1/02.jpg"]}, "platinum-academy-football-kit-2": {"title": "Platinum Academy Football Kit", "images": ["contra-products/academy/platinum-academy-football-kit-2/01.jpg", "contra-products/academy/platinum-academy-football-kit-2/02.jpg"]}, "spirit-academy-football-kit": {"title": "Spirit Academy Football Kit", "images": ["contra-products/academy/spirit-academy-football-kit/01.jpg", "contra-products/academy/spirit-academy-football-kit/02.jpg"]}, "sportivo-academy-goalkeeper-kit": {"title": "Sportivo Academy Goalkeeper Kit", "images": ["contra-products/academy/sportivo-academy-goalkeeper-kit/01.jpg", "contra-products/academy/sportivo-academy-goalkeeper-kit/02.jpg"]}, "sportivo-academy-goalkeeper-kit-1": {"title": "Sportivo Academy Goalkeeper Kit", "images": ["contra-products/academy/sportivo-academy-goalkeeper-kit-1/01.jpg", "contra-products/academy/sportivo-academy-goalkeeper-kit-1/02.jpg"]}, "sportivo-academy-match-kit": {"title": "Sportivo Academy Match Kit", "images": ["contra-products/academy/sportivo-academy-match-kit/01.jpg", "contra-products/academy/sportivo-academy-match-kit/02.jpg"]}, "sportivo-academy-match-kit-1": {"title": "Sportivo Academy Match Kit", "images": ["contra-products/academy/sportivo-academy-match-kit-1/01.jpg", "contra-products/academy/sportivo-academy-match-kit-1/02.jpg"]}, "sportivo-academy-match-kit-2": {"title": "Sportivo Academy Match Kit", "images": ["contra-products/academy/sportivo-academy-match-kit-2/01.jpg", "contra-products/academy/sportivo-academy-match-kit-2/02.jpg"]}, "sportivo-athletic-tracksuit-set": {"title": "Sportivo Athletic Tracksuit Set", "images": ["contra-products/academy/sportivo-athletic-tracksuit-set/01.jpg", "contra-products/academy/sportivo-athletic-tracksuit-set/02.jpg"]}, "training-tracksuit": {"title": "Training Tracksuit", "images": ["contra-products/academy/training-tracksuit/01.jpg", "contra-products/academy/training-tracksuit/02.jpg"]}};
+(function(){
+  "use strict";
+  var modal=document.getElementById('modal'),stage=document.getElementById('mStage'),
+      titleEl=document.getElementById('mTitle'),dotsEl=document.getElementById('mDots'),
+      prev=document.getElementById('mPrev'),next=document.getElementById('mNext'),
+      close=document.getElementById('mClose');
+  var imgs=[],idx=0;
+  function render(){
+    stage.querySelectorAll('img').forEach(function(im,i){im.classList.toggle('is-active',i===idx);});
+    dotsEl.querySelectorAll('i').forEach(function(d,i){d.classList.toggle('is-active',i===idx);});
+  }
+  function open(p){
+    imgs=p.images;idx=0;titleEl.textContent=p.title;
+    stage.innerHTML='';dotsEl.innerHTML='';
+    imgs.forEach(function(src,i){
+      var im=document.createElement('img');im.src=src;im.alt=p.title;if(i===0)im.className='is-active';stage.appendChild(im);
+      var d=document.createElement('i');if(i===0)d.className='is-active';dotsEl.appendChild(d);
+    });
+    var multi=imgs.length>1;prev.style.display=next.style.display=multi?'grid':'none';
+    modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  }
+  function hide(){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  prev.addEventListener('click',function(){idx=(idx-1+imgs.length)%imgs.length;render();});
+  next.addEventListener('click',function(){idx=(idx+1)%imgs.length;render();});
+  close.addEventListener('click',hide);
+  modal.addEventListener('click',function(e){if(e.target===modal)hide();});
+  document.addEventListener('keydown',function(e){
+    if(!modal.classList.contains('is-open'))return;
+    if(e.key==='Escape')hide();
+    else if(e.key==='ArrowLeft'){idx=(idx-1+imgs.length)%imgs.length;render();}
+    else if(e.key==='ArrowRight'){idx=(idx+1)%imgs.length;render();}
+  });
+  document.querySelectorAll('[data-prod]').forEach(function(card){
+    card.addEventListener('click',function(){open(PRODUCTS[card.getAttribute('data-prod')]);});
+  });
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>

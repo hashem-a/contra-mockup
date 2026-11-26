@@ -1,0 +1,28 @@
+# local/dev junk — not for the published site
+_catalog.html
+_curate.html
+_catalog_full.json
+_allproducts.json
+_products.json
+_dl_list.txt
+_dl_fails.txt
+_imgcheck/
+_ic2/
+_col/
+_pc/
+_lb/
+scrape/
+*.output
+# screenshots from the broken capture tool
+*-full.png
+*-hero*.png
+c6a-*.png
+c6b-*.png
+c7*.png
+ref-*.png
+chk-*.png
+desktop-*.png
+mobile-*.png
+red-test.png
+headed-test.png
+v1-check.png

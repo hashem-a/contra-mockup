@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contra — Club Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+:root{
+  --ink:#171a12;--lime:#d4ed99;--lime-bright:#e4f7a8;--lime-deep:#b8dd6a;--lime-dark:#9cc24e;
+  --accent:#5a7d12;--pop-lime:#DBFC37;--olive:#3f4a2e;
+  --white:#fff;--soft:#f7f8f2;--soft-2:#eef1e6;--border:#e3e6da;--muted:#7c8368;--muted-2:#616753;
+  --font-d:"Inter Tight",sans-serif;--font-b:"Inter",sans-serif;--font-m:"JetBrains Mono",monospace;
+  --wrap:1280px;--gut:clamp(1.25rem,4vw,4.5rem);--ease:cubic-bezier(.22,.61,.36,1);--head-h:72px;--r:14px;--r-lg:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);color:var(--ink);background:var(--white);line-height:1.55;-webkit-font-smoothing:antialiased;padding-top:var(--head-h)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--lime);color:var(--ink)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
+.btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--font-d);font-weight:600;font-size:1rem;padding:.9rem 1.6rem;border-radius:999px;transition:background .2s,transform .2s}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none}
+.btn-acc{background:var(--ink);color:#fff}.btn-acc:hover{background:#000;transform:translateY(-1px)}
+/* hero band */
+.col-hero{background:linear-gradient(170deg,var(--lime-bright),var(--lime) 60%,var(--lime-deep));padding:clamp(3rem,7vw,5.5rem) 0}
+.col-hero .crumb{font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--olive)}
+.col-hero h1{font-family:var(--font-d);font-weight:700;letter-spacing:-.03em;text-transform:uppercase;font-size:clamp(2.6rem,1.4rem+4vw,5rem);line-height:.9;margin-top:.6rem}
+.col-hero p{margin-top:1rem;max-width:52ch;color:var(--olive);font-size:1.1rem}
+.col-hero .count{margin-top:1.2rem;font-family:var(--font-m);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.6);display:inline-block;padding:.4rem .8rem;border-radius:999px}
+/* grid */
+.grid-sec{padding:clamp(3rem,6vw,5rem) 0}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.pcard{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;display:flex;flex-direction:column;text-align:left}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(25,25,25,.12);border-color:var(--lime-dark)}
+.pcard .pc-img{position:relative;aspect-ratio:1;background:var(--soft);overflow:hidden}
+.pcard .pc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.pcard:hover .pc-img img{transform:scale(1.05)}
+.pcard .pc-badge{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.92);font-family:var(--font-m);font-size:.6rem;font-weight:600;letter-spacing:.06em;padding:.2rem .5rem;border-radius:5px;color:var(--muted-2)}
+.pcard .pc-meta{padding:.9rem 1rem 1.1rem}
+.pcard h3{font-family:var(--font-d);font-weight:600;font-size:1rem;line-height:1.2;color:var(--ink)}
+.pcard .pc-cta{margin-top:.5rem;font-family:var(--font-m);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+/* cta band */
+.cta-band{background:var(--ink);color:#fff;text-align:center;padding:clamp(3rem,6vw,5rem) 0}
+.cta-band h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.8rem,3vw,2.6rem)}
+.cta-band p{margin:1rem auto 2rem;max-width:44ch;color:#b9bcc6}
+.cta-band .btn-acc{background:var(--lime);color:var(--ink)}.cta-band .btn-acc:hover{background:var(--lime-deep)}
+/* modal carousel */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(10,12,8,.9);display:none;align-items:center;justify-content:center;padding:2rem}
+.modal.is-open{display:flex}
+.modal-inner{position:relative;max-width:900px;width:100%;background:#fff;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;max-height:90vh}
+.modal-stage{position:relative;background:var(--soft);aspect-ratio:1;max-height:70vh}
+.modal-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .3s}
+.modal-stage img.is-active{opacity:1}
+.modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:2}
+.modal-nav svg{width:20px;height:20px;stroke:var(--ink);fill:none}
+.modal-prev{left:1rem}.modal-next{right:1rem}
+.modal-foot{padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--border)}
+.modal-foot h3{font-family:var(--font-d);font-weight:700;font-size:1.15rem}
+.modal-foot .dots{display:flex;gap:.3rem}
+.modal-foot .dots i{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.modal-foot .dots i.is-active{background:var(--ink)}
+.modal-close{position:absolute;top:1rem;right:1rem;z-index:3;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;font-size:1.3rem;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+@media(max-width:1023px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.pgrid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="col-hero"><div class="wrap">
+  <div class="crumb">Home / Collections / Club</div>
+  <h1>Club</h1>
+  <p>Match, training &amp; travel kit for professional and amateur clubs — your crest, your colours, every squad.</p>
+  <div class="count">37 products</div>
+</div></section>
+
+<section class="grid-sec"><div class="wrap">
+  <div class="pgrid">
+    <button class="pcard" data-prod="al-ahly-basketball-giveaway-jersey"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ahly-basketball-giveaway-jersey/01.jpg" alt="Al Ahly Basketball Giveaway Jersey"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ahly Basketball Giveaway Jersey</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-ahly-giveaway-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ahly-giveaway-t-shirt/01.jpg" alt="Al Ahly Giveaway T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ahly Giveaway T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-ahly-giveaway-t-shirt-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ahly-giveaway-t-shirt-1/01.jpg" alt="Al Ahly Giveaway T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ahly Giveaway T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-ahly-giveaway-t-shirt-2"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ahly-giveaway-t-shirt-2/01.jpg" alt="Al Ahly Giveaway T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ahly Giveaway T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-ahly-red-football-jersey"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ahly-red-football-jersey/01.jpg" alt="Al Ahly Red Football Jersey"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ahly Red Football Jersey</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-ettifaq-club-football-jersey"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-ettifaq-club-football-jersey/01.jpg" alt="Al Ettifaq Club Football Jersey"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Ettifaq Club Football Jersey</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-hilal-sc-sudan-giveaway-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt/01.jpg" alt="Al Hilal SC Sudan Giveaway T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Hilal SC Sudan Giveaway T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-hilal-sc-sudan-giveaway-t-shirt-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt-1/01.jpg" alt="Al Hilal SC Sudan Giveaway T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Hilal SC Sudan Giveaway T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-club-soft-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-club-soft-tracksuit/01.jpg" alt="Al Nasr Club Soft Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Club Soft Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-oman-training-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-oman-training-kit/01.jpg" alt="Al Nasr Oman Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Oman Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-oman-training-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-oman-training-kit-1/01.jpg" alt="Al Nasr Oman Training Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Oman Training Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-omani-club-polo-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-omani-club-polo-shirt/01.jpg" alt="Al Nasr Omani Club Polo Shirt"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>Al Nasr Omani Club Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-omani-club-polo-shirt-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-omani-club-polo-shirt-1/01.jpg" alt="Al Nasr Omani Club Polo Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Omani Club Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-omani-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-omani-football-kit/01.jpg" alt="Al Nasr Omani Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Omani Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nasr-omani-football-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nasr-omani-football-kit-1/01.jpg" alt="Al Nasr Omani Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nasr Omani Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="al-nassr-club-travel-players-arrival-set"><div class="pc-img"><img loading="lazy" src="contra-products/club/al-nassr-club-travel-players-arrival-set/01.jpg" alt="Al Nassr Club Travel &amp; Players Arrival Set"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Al Nassr Club Travel &amp; Players Arrival Set</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-athletic-hoodie"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-athletic-hoodie/01.jpg" alt="City Club Athletic Hoodie"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Athletic Hoodie</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-athletic-pants"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-athletic-pants/01.jpg" alt="City Club Athletic Pants"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Athletic Pants</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-basketball-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-basketball-kit/01.jpg" alt="City Club Basketball Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Basketball Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-black-training"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-black-training/01.jpg" alt="City Club Black Training"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Black Training</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-goalkeeper-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-goalkeeper-kit/01.jpg" alt="City Club Goalkeeper Kit"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Goalkeeper Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-imported-dive-fabric-training"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-imported-dive-fabric-training/01.jpg" alt="City Club Imported Dive Fabric Training"><span class="pc-badge">+3</span></div><div class="pc-meta"><h3>City Club Imported Dive Fabric Training</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-performance-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-performance-kit/01.jpg" alt="City Club Performance Kit"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Performance Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-performance-polo-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-performance-polo-shirt/01.jpg" alt="City Club Performance Polo Shirt"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Performance Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-performance-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-performance-t-shirt/01.jpg" alt="City Club Performance T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Performance T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-premium-melton-hoodie"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-premium-melton-hoodie/01.jpg" alt="City Club Premium Melton Hoodie"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club Premium Melton Hoodie</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-ribbed-lycra-sports-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-ribbed-lycra-sports-t-shirt/01.jpg" alt="City Club Ribbed Lycra Sports T-Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Ribbed Lycra Sports T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-sports-jacket-full-zip"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-sports-jacket-full-zip/01.jpg" alt="City Club Sports Jacket – Full Zip"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Sports Jacket – Full Zip</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-training-kit-green"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-training-kit-green/01.jpg" alt="City Club Training Kit – Green"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Training Kit – Green</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-training-sleeveless-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-training-sleeveless-shirt/01.jpg" alt="City Club Training Sleeveless Shirt"><span class="pc-badge">+3</span></div><div class="pc-meta"><h3>City Club Training Sleeveless Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-waterproof-backpack"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-waterproof-backpack/01.jpg" alt="City Club Waterproof Backpack"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club Waterproof Backpack</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-white-basketball-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-white-basketball-kit/01.jpg" alt="City Club White Basketball Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club White Basketball Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-white-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-white-football-kit/01.jpg" alt="City Club White Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>City Club White Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="city-club-white-sublimation-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/city-club-white-sublimation-football-kit/01.jpg" alt="City Club White Sublimation Football Kit"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>City Club White Sublimation Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="salalah-club-football-kit"><div class="pc-img"><img loading="lazy" src="contra-products/club/salalah-club-football-kit/01.jpg" alt="Salalah Club Football Kit"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>Salalah Club Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="salalah-club-football-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/club/salalah-club-football-kit-1/01.jpg" alt="Salalah Club Football Kit"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>Salalah Club Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="salalah-club-football-kit-2"><div class="pc-img"><img loading="lazy" src="contra-products/club/salalah-club-football-kit-2/01.jpg" alt="Salalah Club Football Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Salalah Club Football Kit</h3><div class="pc-cta">View photos</div></div></button>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap">
+  <h2>Kit your team in Club wear.</h2>
+  <p>Request a quote and a Contra rep will build your first mockup — factory-direct, no commitment.</p>
+  <a class="btn btn-acc" href="contra7-1.html#request">Request a quote <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div></section>
+
+<div id="site-footer"></div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-inner">
+    <button class="modal-close" id="mClose" aria-label="Close">✕</button>
+    <div class="modal-stage" id="mStage"></div>
+    <button class="modal-nav modal-prev" id="mPrev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="modal-nav modal-next" id="mNext" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="modal-foot"><h3 id="mTitle"></h3><div class="dots" id="mDots"></div></div>
+  </div>
+</div>
+
+<script>
+var PRODUCTS = {"al-ahly-basketball-giveaway-jersey": {"title": "Al Ahly Basketball Giveaway Jersey", "images": ["contra-products/club/al-ahly-basketball-giveaway-jersey/01.jpg", "contra-products/club/al-ahly-basketball-giveaway-jersey/02.jpg"]}, "al-ahly-giveaway-t-shirt": {"title": "Al Ahly Giveaway T-Shirt", "images": ["contra-products/club/al-ahly-giveaway-t-shirt/01.jpg", "contra-products/club/al-ahly-giveaway-t-shirt/02.jpg"]}, "al-ahly-giveaway-t-shirt-1": {"title": "Al Ahly Giveaway T-Shirt", "images": ["contra-products/club/al-ahly-giveaway-t-shirt-1/01.jpg", "contra-products/club/al-ahly-giveaway-t-shirt-1/02.jpg"]}, "al-ahly-giveaway-t-shirt-2": {"title": "Al Ahly Giveaway T-Shirt", "images": ["contra-products/club/al-ahly-giveaway-t-shirt-2/01.jpg", "contra-products/club/al-ahly-giveaway-t-shirt-2/02.jpg"]}, "al-ahly-red-football-jersey": {"title": "Al Ahly Red Football Jersey", "images": ["contra-products/club/al-ahly-red-football-jersey/01.jpg", "contra-products/club/al-ahly-red-football-jersey/02.jpg"]}, "al-ettifaq-club-football-jersey": {"title": "Al Ettifaq Club Football Jersey", "images": ["contra-products/club/al-ettifaq-club-football-jersey/01.jpg", "contra-products/club/al-ettifaq-club-football-jersey/02.jpg"]}, "al-hilal-sc-sudan-giveaway-t-shirt": {"title": "Al Hilal SC Sudan Giveaway T-Shirt", "images": ["contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt/01.jpg", "contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt/02.jpg"]}, "al-hilal-sc-sudan-giveaway-t-shirt-1": {"title": "Al Hilal SC Sudan Giveaway T-Shirt", "images": ["contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt-1/01.jpg", "contra-products/club/al-hilal-sc-sudan-giveaway-t-shirt-1/02.jpg"]}, "al-nasr-club-soft-tracksuit": {"title": "Al Nasr Club Soft Tracksuit", "images": ["contra-products/club/al-nasr-club-soft-tracksuit/01.jpg", "contra-products/club/al-nasr-club-soft-tracksuit/02.jpg"]}, "al-nasr-oman-training-kit": {"title": "Al Nasr Oman Training Kit", "images": ["contra-products/club/al-nasr-oman-training-kit/01.jpg", "contra-products/club/al-nasr-oman-training-kit/02.jpg"]}, "al-nasr-oman-training-kit-1": {"title": "Al Nasr Oman Training Kit", "images": ["contra-products/club/al-nasr-oman-training-kit-1/01.jpg", "contra-products/club/al-nasr-oman-training-kit-1/02.jpg"]}, "al-nasr-omani-club-polo-shirt": {"title": "Al Nasr Omani Club Polo Shirt", "images": ["contra-products/club/al-nasr-omani-club-polo-shirt/01.jpg", "contra-products/club/al-nasr-omani-club-polo-shirt/02.jpg", "contra-products/club/al-nasr-omani-club-polo-shirt/03.jpg"]}, "al-nasr-omani-club-polo-shirt-1": {"title": "Al Nasr Omani Club Polo Shirt", "images": ["contra-products/club/al-nasr-omani-club-polo-shirt-1/01.jpg", "contra-products/club/al-nasr-omani-club-polo-shirt-1/02.jpg"]}, "al-nasr-omani-football-kit": {"title": "Al Nasr Omani Football Kit", "images": ["contra-products/club/al-nasr-omani-football-kit/01.jpg", "contra-products/club/al-nasr-omani-football-kit/02.jpg"]}, "al-nasr-omani-football-kit-1": {"title": "Al Nasr Omani Football Kit", "images": ["contra-products/club/al-nasr-omani-football-kit-1/01.jpg", "contra-products/club/al-nasr-omani-football-kit-1/02.jpg"]}, "al-nassr-club-travel-players-arrival-set": {"title": "Al Nassr Club Travel & Players Arrival Set", "images": ["contra-products/club/al-nassr-club-travel-players-arrival-set/01.jpg", "contra-products/club/al-nassr-club-travel-players-arrival-set/02.jpg"]}, "city-club-athletic-hoodie": {"title": "City Club Athletic Hoodie", "images": ["contra-products/club/city-club-athletic-hoodie/01.jpg", "contra-products/club/city-club-athletic-hoodie/02.jpg", "contra-products/club/city-club-athletic-hoodie/03.jpg"]}, "city-club-athletic-pants": {"title": "City Club Athletic Pants", "images": ["contra-products/club/city-club-athletic-pants/01.jpg", "contra-products/club/city-club-athletic-pants/02.jpg", "contra-products/club/city-club-athletic-pants/03.jpg"]}, "city-club-basketball-kit": {"title": "City Club Basketball Kit", "images": ["contra-products/club/city-club-basketball-kit/01.jpg", "contra-products/club/city-club-basketball-kit/02.jpg"]}, "city-club-black-training": {"title": "City Club Black Training", "images": ["contra-products/club/city-club-black-training/01.jpg", "contra-products/club/city-club-black-training/02.jpg", "contra-products/club/city-club-black-training/03.jpg"]}, "city-club-goalkeeper-kit": {"title": "City Club Goalkeeper Kit", "images": ["contra-products/club/city-club-goalkeeper-kit/01.jpg", "contra-products/club/city-club-goalkeeper-kit/02.jpg", "contra-products/club/city-club-goalkeeper-kit/03.jpg"]}, "city-club-imported-dive-fabric-training": {"title": "City Club Imported Dive Fabric Training", "images": ["contra-products/club/city-club-imported-dive-fabric-training/01.jpg", "contra-products/club/city-club-imported-dive-fabric-training/02.jpg", "contra-products/club/city-club-imported-dive-fabric-training/03.jpg", "contra-products/club/city-club-imported-dive-fabric-training/04.jpg"]}, "city-club-performance-kit": {"title": "City Club Performance Kit", "images": ["contra-products/club/city-club-performance-kit/01.jpg", "contra-products/club/city-club-performance-kit/02.jpg", "contra-products/club/city-club-performance-kit/03.jpg"]}, "city-club-performance-polo-shirt": {"title": "City Club Performance Polo Shirt", "images": ["contra-products/club/city-club-performance-polo-shirt/01.jpg", "contra-products/club/city-club-performance-polo-shirt/02.jpg", "contra-products/club/city-club-performance-polo-shirt/03.jpg"]}, "city-club-performance-t-shirt": {"title": "City Club Performance T-Shirt", "images": ["contra-products/club/city-club-performance-t-shirt/01.jpg", "contra-products/club/city-club-performance-t-shirt/02.jpg"]}, "city-club-premium-melton-hoodie": {"title": "City Club Premium Melton Hoodie", "images": ["contra-products/club/city-club-premium-melton-hoodie/01.jpg", "contra-products/club/city-club-premium-melton-hoodie/02.jpg", "contra-products/club/city-club-premium-melton-hoodie/03.jpg"]}, "city-club-ribbed-lycra-sports-t-shirt": {"title": "City Club Ribbed Lycra Sports T-Shirt", "images": ["contra-products/club/city-club-ribbed-lycra-sports-t-shirt/01.jpg", "contra-products/club/city-club-ribbed-lycra-sports-t-shirt/02.jpg"]}, "city-club-sports-jacket-full-zip": {"title": "City Club Sports Jacket – Full Zip", "images": ["contra-products/club/city-club-sports-jacket-full-zip/01.jpg", "contra-products/club/city-club-sports-jacket-full-zip/02.jpg"]}, "city-club-training-kit-green": {"title": "City Club Training Kit – Green", "images": ["contra-products/club/city-club-training-kit-green/01.jpg", "contra-products/club/city-club-training-kit-green/02.jpg"]}, "city-club-training-sleeveless-shirt": {"title": "City Club Training Sleeveless Shirt", "images": ["contra-products/club/city-club-training-sleeveless-shirt/01.jpg", "contra-products/club/city-club-training-sleeveless-shirt/02.jpg", "contra-products/club/city-club-training-sleeveless-shirt/03.jpg", "contra-products/club/city-club-training-sleeveless-shirt/04.jpg"]}, "city-club-waterproof-backpack": {"title": "City Club Waterproof Backpack", "images": ["contra-products/club/city-club-waterproof-backpack/01.jpg", "contra-products/club/city-club-waterproof-backpack/02.jpg"]}, "city-club-white-basketball-kit": {"title": "City Club White Basketball Kit", "images": ["contra-products/club/city-club-white-basketball-kit/01.jpg", "contra-products/club/city-club-white-basketball-kit/02.jpg"]}, "city-club-white-football-kit": {"title": "City Club White Football Kit", "images": ["contra-products/club/city-club-white-football-kit/01.jpg", "contra-products/club/city-club-white-football-kit/02.jpg"]}, "city-club-white-sublimation-football-kit": {"title": "City Club White Sublimation Football Kit", "images": ["contra-products/club/city-club-white-sublimation-football-kit/01.jpg", "contra-products/club/city-club-white-sublimation-football-kit/02.jpg", "contra-products/club/city-club-white-sublimation-football-kit/03.jpg"]}, "salalah-club-football-kit": {"title": "Salalah Club Football Kit", "images": ["contra-products/club/salalah-club-football-kit/01.jpg", "contra-products/club/salalah-club-football-kit/02.jpg", "contra-products/club/salalah-club-football-kit/03.jpg"]}, "salalah-club-football-kit-1": {"title": "Salalah Club Football Kit", "images": ["contra-products/club/salalah-club-football-kit-1/01.jpg", "contra-products/club/salalah-club-football-kit-1/02.jpg", "contra-products/club/salalah-club-football-kit-1/03.jpg"]}, "salalah-club-football-kit-2": {"title": "Salalah Club Football Kit", "images": ["contra-products/club/salalah-club-football-kit-2/01.jpg", "contra-products/club/salalah-club-football-kit-2/02.jpg"]}};
+(function(){
+  "use strict";
+  var modal=document.getElementById('modal'),stage=document.getElementById('mStage'),
+      titleEl=document.getElementById('mTitle'),dotsEl=document.getElementById('mDots'),
+      prev=document.getElementById('mPrev'),next=document.getElementById('mNext'),
+      close=document.getElementById('mClose');
+  var imgs=[],idx=0;
+  function render(){
+    stage.querySelectorAll('img').forEach(function(im,i){im.classList.toggle('is-active',i===idx);});
+    dotsEl.querySelectorAll('i').forEach(function(d,i){d.classList.toggle('is-active',i===idx);});
+  }
+  function open(p){
+    imgs=p.images;idx=0;titleEl.textContent=p.title;
+    stage.innerHTML='';dotsEl.innerHTML='';
+    imgs.forEach(function(src,i){
+      var im=document.createElement('img');im.src=src;im.alt=p.title;if(i===0)im.className='is-active';stage.appendChild(im);
+      var d=document.createElement('i');if(i===0)d.className='is-active';dotsEl.appendChild(d);
+    });
+    var multi=imgs.length>1;prev.style.display=next.style.display=multi?'grid':'none';
+    modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  }
+  function hide(){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  prev.addEventListener('click',function(){idx=(idx-1+imgs.length)%imgs.length;render();});
+  next.addEventListener('click',function(){idx=(idx+1)%imgs.length;render();});
+  close.addEventListener('click',hide);
+  modal.addEventListener('click',function(e){if(e.target===modal)hide();});
+  document.addEventListener('keydown',function(e){
+    if(!modal.classList.contains('is-open'))return;
+    if(e.key==='Escape')hide();
+    else if(e.key==='ArrowLeft'){idx=(idx-1+imgs.length)%imgs.length;render();}
+    else if(e.key==='ArrowRight'){idx=(idx+1)%imgs.length;render();}
+  });
+  document.querySelectorAll('[data-prod]').forEach(function(card){
+    card.addEventListener('click',function(){open(PRODUCTS[card.getAttribute('data-prod')]);});
+  });
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>

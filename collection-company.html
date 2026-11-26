@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contra — Company Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+:root{
+  --ink:#171a12;--lime:#d4ed99;--lime-bright:#e4f7a8;--lime-deep:#b8dd6a;--lime-dark:#9cc24e;
+  --accent:#5a7d12;--pop-lime:#DBFC37;--olive:#3f4a2e;
+  --white:#fff;--soft:#f7f8f2;--soft-2:#eef1e6;--border:#e3e6da;--muted:#7c8368;--muted-2:#616753;
+  --font-d:"Inter Tight",sans-serif;--font-b:"Inter",sans-serif;--font-m:"JetBrains Mono",monospace;
+  --wrap:1280px;--gut:clamp(1.25rem,4vw,4.5rem);--ease:cubic-bezier(.22,.61,.36,1);--head-h:72px;--r:14px;--r-lg:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);color:var(--ink);background:var(--white);line-height:1.55;-webkit-font-smoothing:antialiased;padding-top:var(--head-h)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--lime);color:var(--ink)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:var(--gut)}
+.btn{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--font-d);font-weight:600;font-size:1rem;padding:.9rem 1.6rem;border-radius:999px;transition:background .2s,transform .2s}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none}
+.btn-acc{background:var(--ink);color:#fff}.btn-acc:hover{background:#000;transform:translateY(-1px)}
+/* hero band */
+.col-hero{background:linear-gradient(170deg,var(--lime-bright),var(--lime) 60%,var(--lime-deep));padding:clamp(3rem,7vw,5.5rem) 0}
+.col-hero .crumb{font-family:var(--font-m);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--olive)}
+.col-hero h1{font-family:var(--font-d);font-weight:700;letter-spacing:-.03em;text-transform:uppercase;font-size:clamp(2.6rem,1.4rem+4vw,5rem);line-height:.9;margin-top:.6rem}
+.col-hero p{margin-top:1rem;max-width:52ch;color:var(--olive);font-size:1.1rem}
+.col-hero .count{margin-top:1.2rem;font-family:var(--font-m);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.6);display:inline-block;padding:.4rem .8rem;border-radius:999px}
+/* grid */
+.grid-sec{padding:clamp(3rem,6vw,5rem) 0}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.pcard{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;display:flex;flex-direction:column;text-align:left}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(25,25,25,.12);border-color:var(--lime-dark)}
+.pcard .pc-img{position:relative;aspect-ratio:1;background:var(--soft);overflow:hidden}
+.pcard .pc-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.pcard:hover .pc-img img{transform:scale(1.05)}
+.pcard .pc-badge{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.92);font-family:var(--font-m);font-size:.6rem;font-weight:600;letter-spacing:.06em;padding:.2rem .5rem;border-radius:5px;color:var(--muted-2)}
+.pcard .pc-meta{padding:.9rem 1rem 1.1rem}
+.pcard h3{font-family:var(--font-d);font-weight:600;font-size:1rem;line-height:1.2;color:var(--ink)}
+.pcard .pc-cta{margin-top:.5rem;font-family:var(--font-m);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+/* cta band */
+.cta-band{background:var(--ink);color:#fff;text-align:center;padding:clamp(3rem,6vw,5rem) 0}
+.cta-band h2{font-family:var(--font-d);font-weight:700;letter-spacing:-.02em;font-size:clamp(1.8rem,3vw,2.6rem)}
+.cta-band p{margin:1rem auto 2rem;max-width:44ch;color:#b9bcc6}
+.cta-band .btn-acc{background:var(--lime);color:var(--ink)}.cta-band .btn-acc:hover{background:var(--lime-deep)}
+/* modal carousel */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(10,12,8,.9);display:none;align-items:center;justify-content:center;padding:2rem}
+.modal.is-open{display:flex}
+.modal-inner{position:relative;max-width:900px;width:100%;background:#fff;border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;max-height:90vh}
+.modal-stage{position:relative;background:var(--soft);aspect-ratio:1;max-height:70vh}
+.modal-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .3s}
+.modal-stage img.is-active{opacity:1}
+.modal-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:2}
+.modal-nav svg{width:20px;height:20px;stroke:var(--ink);fill:none}
+.modal-prev{left:1rem}.modal-next{right:1rem}
+.modal-foot{padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--border)}
+.modal-foot h3{font-family:var(--font-d);font-weight:700;font-size:1.15rem}
+.modal-foot .dots{display:flex;gap:.3rem}
+.modal-foot .dots i{width:7px;height:7px;border-radius:50%;background:var(--border)}
+.modal-foot .dots i.is-active{background:var(--ink)}
+.modal-close{position:absolute;top:1rem;right:1rem;z-index:3;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;font-size:1.3rem;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.2)}
+@media(max-width:1023px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:460px){.pgrid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="col-hero"><div class="wrap">
+  <div class="crumb">Home / Collections / Company</div>
+  <h1>Company</h1>
+  <p>Branded staff, event and corporate teamwear — your logo, delivered fast.</p>
+  <div class="count">17 products</div>
+</div></section>
+
+<section class="grid-sec"><div class="wrap">
+  <div class="pgrid">
+    <button class="pcard" data-prod="black-dazzle-fabric-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/company/black-dazzle-fabric-tracksuit/01.jpg" alt="Black Dazzle Fabric Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Black Dazzle Fabric Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="football-match-kit"><div class="pc-img"><img loading="lazy" src="contra-products/company/football-match-kit/01.jpg" alt="Football Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Football Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ikea-corporate-long-sleeve-polo-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/company/ikea-corporate-long-sleeve-polo-shirt/01.jpg" alt="IKEA Corporate Long Sleeve Polo Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>IKEA Corporate Long Sleeve Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ikea-corporate-long-sleeve-polo-shirt-1"><div class="pc-img"><img loading="lazy" src="contra-products/company/ikea-corporate-long-sleeve-polo-shirt-1/01.jpg" alt="IKEA Corporate Long Sleeve Polo Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>IKEA Corporate Long Sleeve Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ikea-corporate-long-sleeve-polo-shirt-2"><div class="pc-img"><img loading="lazy" src="contra-products/company/ikea-corporate-long-sleeve-polo-shirt-2/01.jpg" alt="IKEA Corporate Long Sleeve Polo Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>IKEA Corporate Long Sleeve Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="ikea-embroidered-milton-padded-hoodie-jacket"><div class="pc-img"><img loading="lazy" src="contra-products/company/ikea-embroidered-milton-padded-hoodie-jacket/01.jpg" alt="IKEA Embroidered Milton Padded Hoodie Jacket"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>IKEA Embroidered Milton Padded Hoodie Jacket</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="long-sleeve-pique-polo-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/company/long-sleeve-pique-polo-shirt/01.jpg" alt="Long Sleeve Piqué Polo Shirt"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Long Sleeve Piqué Polo Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="premium-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/company/premium-tracksuit/01.jpg" alt="Premium Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Premium Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="premium-tracksuit-1"><div class="pc-img"><img loading="lazy" src="contra-products/company/premium-tracksuit-1/01.jpg" alt="Premium Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Premium Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="premium-tracksuit-2"><div class="pc-img"><img loading="lazy" src="contra-products/company/premium-tracksuit-2/01.jpg" alt="Premium Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Premium Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="professional-sports-kit"><div class="pc-img"><img loading="lazy" src="contra-products/company/professional-sports-kit/01.jpg" alt="Professional Sports Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Professional Sports Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="professional-sports-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/company/professional-sports-kit-1/01.jpg" alt="Professional Sports Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Professional Sports Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="scuba-fabric-tracksuit"><div class="pc-img"><img loading="lazy" src="contra-products/company/scuba-fabric-tracksuit/01.jpg" alt="Scuba Fabric Tracksuit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>Scuba Fabric Tracksuit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="we-applied-technology-schools-long-sleeve-sports-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/company/we-applied-technology-schools-long-sleeve-sports-t-shirt/01.jpg" alt="WE Applied Technology Schools Long Sleeve Sports T-Shirt"></div><div class="pc-meta"><h3>WE Applied Technology Schools Long Sleeve Sports T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="we-applied-technology-schools-lycra-t-shirt"><div class="pc-img"><img loading="lazy" src="contra-products/company/we-applied-technology-schools-lycra-t-shirt/01.jpg" alt="WE Applied Technology Schools Lycra T-Shirt"><span class="pc-badge">+2</span></div><div class="pc-meta"><h3>WE Applied Technology Schools Lycra T-Shirt</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="we-performance-match-kit"><div class="pc-img"><img loading="lazy" src="contra-products/company/we-performance-match-kit/01.jpg" alt="WE Performance Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>WE Performance Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+    <button class="pcard" data-prod="we-performance-match-kit-1"><div class="pc-img"><img loading="lazy" src="contra-products/company/we-performance-match-kit-1/01.jpg" alt="WE Performance Match Kit"><span class="pc-badge">+1</span></div><div class="pc-meta"><h3>WE Performance Match Kit</h3><div class="pc-cta">View photos</div></div></button>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap">
+  <h2>Kit your team in Company wear.</h2>
+  <p>Request a quote and a Contra rep will build your first mockup — factory-direct, no commitment.</p>
+  <a class="btn btn-acc" href="contra7-1.html#request">Request a quote <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div></section>
+
+<div id="site-footer"></div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-inner">
+    <button class="modal-close" id="mClose" aria-label="Close">✕</button>
+    <div class="modal-stage" id="mStage"></div>
+    <button class="modal-nav modal-prev" id="mPrev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="modal-nav modal-next" id="mNext" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="modal-foot"><h3 id="mTitle"></h3><div class="dots" id="mDots"></div></div>
+  </div>
+</div>
+
+<script>
+var PRODUCTS = {"black-dazzle-fabric-tracksuit": {"title": "Black Dazzle Fabric Tracksuit", "images": ["contra-products/company/black-dazzle-fabric-tracksuit/01.jpg", "contra-products/company/black-dazzle-fabric-tracksuit/02.jpg"]}, "football-match-kit": {"title": "Football Match Kit", "images": ["contra-products/company/football-match-kit/01.jpg", "contra-products/company/football-match-kit/02.jpg"]}, "ikea-corporate-long-sleeve-polo-shirt": {"title": "IKEA Corporate Long Sleeve Polo Shirt", "images": ["contra-products/company/ikea-corporate-long-sleeve-polo-shirt/01.jpg", "contra-products/company/ikea-corporate-long-sleeve-polo-shirt/02.jpg"]}, "ikea-corporate-long-sleeve-polo-shirt-1": {"title": "IKEA Corporate Long Sleeve Polo Shirt", "images": ["contra-products/company/ikea-corporate-long-sleeve-polo-shirt-1/01.jpg", "contra-products/company/ikea-corporate-long-sleeve-polo-shirt-1/02.jpg"]}, "ikea-corporate-long-sleeve-polo-shirt-2": {"title": "IKEA Corporate Long Sleeve Polo Shirt", "images": ["contra-products/company/ikea-corporate-long-sleeve-polo-shirt-2/01.jpg", "contra-products/company/ikea-corporate-long-sleeve-polo-shirt-2/02.jpg"]}, "ikea-embroidered-milton-padded-hoodie-jacket": {"title": "IKEA Embroidered Milton Padded Hoodie Jacket", "images": ["contra-products/company/ikea-embroidered-milton-padded-hoodie-jacket/01.jpg", "contra-products/company/ikea-embroidered-milton-padded-hoodie-jacket/02.jpg"]}, "long-sleeve-pique-polo-shirt": {"title": "Long Sleeve Piqué Polo Shirt", "images": ["contra-products/company/long-sleeve-pique-polo-shirt/01.jpg", "contra-products/company/long-sleeve-pique-polo-shirt/02.jpg"]}, "premium-tracksuit": {"title": "Premium Tracksuit", "images": ["contra-products/company/premium-tracksuit/01.jpg", "contra-products/company/premium-tracksuit/02.jpg"]}, "premium-tracksuit-1": {"title": "Premium Tracksuit", "images": ["contra-products/company/premium-tracksuit-1/01.jpg", "contra-products/company/premium-tracksuit-1/02.jpg"]}, "premium-tracksuit-2": {"title": "Premium Tracksuit", "images": ["contra-products/company/premium-tracksuit-2/01.jpg", "contra-products/company/premium-tracksuit-2/02.jpg"]}, "professional-sports-kit": {"title": "Professional Sports Kit", "images": ["contra-products/company/professional-sports-kit/01.jpg", "contra-products/company/professional-sports-kit/02.jpg"]}, "professional-sports-kit-1": {"title": "Professional Sports Kit", "images": ["contra-products/company/professional-sports-kit-1/01.jpg", "contra-products/company/professional-sports-kit-1/02.jpg"]}, "scuba-fabric-tracksuit": {"title": "Scuba Fabric Tracksuit", "images": ["contra-products/company/scuba-fabric-tracksuit/01.jpg", "contra-products/company/scuba-fabric-tracksuit/02.jpg"]}, "we-applied-technology-schools-long-sleeve-sports-t-shirt": {"title": "WE Applied Technology Schools Long Sleeve Sports T-Shirt", "images": ["contra-products/company/we-applied-technology-schools-long-sleeve-sports-t-shirt/01.jpg"]}, "we-applied-technology-schools-lycra-t-shirt": {"title": "WE Applied Technology Schools Lycra T-Shirt", "images": ["contra-products/company/we-applied-technology-schools-lycra-t-shirt/01.jpg", "contra-products/company/we-applied-technology-schools-lycra-t-shirt/02.jpg", "contra-products/company/we-applied-technology-schools-lycra-t-shirt/03.jpg"]}, "we-performance-match-kit": {"title": "WE Performance Match Kit", "images": ["contra-products/company/we-performance-match-kit/01.jpg", "contra-products/company/we-performance-match-kit/02.jpg"]}, "we-performance-match-kit-1": {"title": "WE Performance Match Kit", "images": ["contra-products/company/we-performance-match-kit-1/01.jpg", "contra-products/company/we-performance-match-kit-1/02.jpg"]}};
+(function(){
+  "use strict";
+  var modal=document.getElementById('modal'),stage=document.getElementById('mStage'),
+      titleEl=document.getElementById('mTitle'),dotsEl=document.getElementById('mDots'),
+      prev=document.getElementById('mPrev'),next=document.getElementById('mNext'),
+      close=document.getElementById('mClose');
+  var imgs=[],idx=0;
+  function render(){
+    stage.querySelectorAll('img').forEach(function(im,i){im.classList.toggle('is-active',i===idx);});
+    dotsEl.querySelectorAll('i').forEach(function(d,i){d.classList.toggle('is-active',i===idx);});
+  }
+  function open(p){
+    imgs=p.images;idx=0;titleEl.textContent=p.title;
+    stage.innerHTML='';dotsEl.innerHTML='';
+    imgs.forEach(function(src,i){
+      var im=document.createElement('img');im.src=src;im.alt=p.title;if(i===0)im.className='is-active';stage.appendChild(im);
+      var d=document.createElement('i');if(i===0)d.className='is-active';dotsEl.appendChild(d);
+    });
+    var multi=imgs.length>1;prev.style.display=next.style.display=multi?'grid':'none';
+    modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+  }
+  function hide(){modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  prev.addEventListener('click',function(){idx=(idx-1+imgs.length)%imgs.length;render();});
+  next.addEventListener('click',function(){idx=(idx+1)%imgs.length;render();});
+  close.addEventListener('click',hide);
+  modal.addEventListener('click',function(e){if(e.target===modal)hide();});
+  document.addEventListener('keydown',function(e){
+    if(!modal.classList.contains('is-open'))return;
+    if(e.key==='Escape')hide();
+    else if(e.key==='ArrowLeft'){idx=(idx-1+imgs.length)%imgs.length;render();}
+    else if(e.key==='ArrowRight'){idx=(idx+1)%imgs.length;render();}
+  });
+  document.querySelectorAll('[data-prod]').forEach(function(card){
+    card.addEventListener('click',function(){open(PRODUCTS[card.getAttribute('data-prod')]);});
+  });
+})();
+</script>
+<script src="site.js"></script>
+</body>
+</html>
